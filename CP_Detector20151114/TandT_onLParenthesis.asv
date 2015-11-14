@@ -113,7 +113,7 @@ for ind = 3:length(QT_files)
     % ss= 'tMark = marks.T';
     eval(STR_TMARK);
     for mi = 1:length(tMark)
-        tMark(ind)=find(stime>=tMark(ind),1);
+        tMark(mi)=find(stime>=tMark(mi),1);
     end
 
 
@@ -156,10 +156,23 @@ TreeBagger_ModelStruct.Window_Len=Window_Len;
 clearvars -except TreeBagger_ModelStruct;
 close all;
 
-% Test Parameters
+
+%% Key Parameters for this mFile
+% debug cnt
+debug_cnt=20;
+% dwt 前DWT_LOW阶设置为0
+DWT_LOW = 2;
+DWT_HIGH = 9;
+% choose training target
+STR_TMARK = 'tMark = marks.T';
+%---保存训练模型，附上系统时间---
+SaveModelFilename=strcat('F:\TU\心电\DNN\TreeBagger_windowedMethod\CP_Detector20151114\Models\Twave_',...
+    datestr(now,30),'QT.mat');
+
+
 addpath('F:\TU\心电\QTDatabase\Matlab\');% QT functions
 addpath('F:\TU\心电\DNN\TreeBagger_windowedMethod\T_wave_detection\ParforProgMonv2');%parfor monitor
-QT_datafilepath='F:\TU\心电\QTDatabase\Matlab\matdata';
+QT_datafilepath='F:\TU\心电\QTDatabase\Matlab\matdata\';
 saveResultfigpath='F:\TU\心电\DNN\TreeBagger_windowedMethod\CP_Detector20151114\Results\';
 QT_files=dir(QT_datafilepath);
 filenameset={QT_files(:).name};
@@ -175,7 +188,7 @@ end
 % --------------训练特征向量格式参数---------------
 % fs=360;%MIT db
 
-Testdebug_cnt=1;
+Testdebug_cnt=10;
 
 %% 遍历每个MITdb数据文件--测试
 % bad_record_id=[113 117 207 215 222 228 230 231];%滤除效果不好的file，不把他们加入训练样本集中
@@ -183,7 +196,7 @@ Testdebug_cnt=1;
 targetfiles={'sel16273','sel16420','sel16483','sel16539','sel16773','sel16786','sel16795','sel17453'};
 
 tic
-for ind = 3:length(QT_files)
+for ind = 3+debug_cnt:length(QT_files)
     
     %% Get Correct Filename
     FileName = QT_files(ind).name;
@@ -196,44 +209,16 @@ for ind = 3:length(QT_files)
     load([QT_datafilepath,FileName]);
     stime = time;
     
-    %% debaselineshift by swt
+    %% Denoise dwt
     
-    denoise_N=224128;
-    sig=sig(1:denoise_N);
-    sig=swt_debaselineshift(sig);
-
+    sig = ECGdwtDenoise(sig,DWT_LOW,DWT_HIGH);
     
     %% 对比检测结果
-    
     eval(STR_TMARK);
+
     
-    if numel(tMark)==0
-        continue;
-    end
-    for ind = 1:length(tMark)
-        tMark(ind)=find(stime>=tMark(ind),1);
-    end
-    tMark=tMark(tMark<=denoise_N);
-    
-    %% only the trainning data is tested
-    seg_start=max(1,tMark(1)-100);
-    seg_end=min(length(sig),tMark(end)+100);
-%     seg_end=min(seg_end,seg_start+2e3);
-    
-%     sig=sig(seg_start:seg_end);
-    
-%     tind=tind-seg_start;
-    sig=sig(1:1e4);
-    
-    figure(1);
-    hold off;
-    plot(sig);
-%     hold on;
-%     plot(tind,sig(tind),'linestyle','none','Marker','x');
-%     tind=[];%clear;
-    title('signal to be tested(Press any key to continue.)');
-    
-%     waitforbuttonpress;
+    %% Test signal with Model
+
     clf(figure(1));
     
     %----------------------------20150725 * Test prediction result---------------------------------------
@@ -241,20 +226,20 @@ for ind = 3:length(QT_files)
     Pscore=[];
     [prd_ind,Pscore]=func_TreeBaggerQT_Test_cat(TreeBagger_ModelStruct.TBobj,TreeBagger_ModelStruct.Window_Len,TreeBagger_ModelStruct.Feature_Relations,sig);%loaded test_sig105
 
-    %% Plot & save fig
+    %% Plot result & Save fig
     figure(1);
     plot(sig);
     hold on;
     plot(prd_ind,sig(prd_ind),'linestyle','none','Marker','o','MarkerEdgecolor','r');
-    plot(tMark,sig(tMark),'linestyle','none','Marker','s','MarkerEdgecolor','g','MarkerFaceColor','g');
+
     %socore
     plot(prd_ind,Pscore);
     
-    title(strcat('Rec-',fl_name,'[1:3072*20]'));
+    title(strcat('Rec-',FileName,'[1:3072*20]'));
     %----Save figure ---
-    savefig(figure(1),strcat(saveResultfigpath,'Rec',fl_name,'_Twave.fig'));
+    savefig(figure(1),[saveResultfigpath,'Rec',FileName,'_Twave.fig']);
     %----Save test data----
-    save(strcat(saveResultfigpath,'TestData',fl_name,'_Twave.mat'),'sig','prd_ind','tind');
+    save([saveResultfigpath,'TestData',FileName,'_Twave.mat'],'sig','prd_ind','tMark');
 
 %     waitforbuttonpress;
     

@@ -113,7 +113,7 @@ for ind = 3:length(QT_files)
     % ss= 'tMark = marks.T';
     eval(STR_TMARK);
     for mi = 1:length(tMark)
-        tMark(ind)=find(stime>=tMark(ind),1);
+        tMark(mi)=find(stime>=tMark(mi),1);
     end
 
 
@@ -156,10 +156,24 @@ TreeBagger_ModelStruct.Window_Len=Window_Len;
 clearvars -except TreeBagger_ModelStruct;
 close all;
 
-% Test Parameters
+
+%% Key Parameters for this mFile
+% debug cnt
+debug_cnt=20;
+Testdebug_cnt=20;
+% dwt 前DWT_LOW阶设置为0
+DWT_LOW = 2;
+DWT_HIGH = 9;
+% choose training target
+STR_TMARK = 'tMark = marks.T';
+%---保存训练模型，附上系统时间---
+SaveModelFilename=strcat('F:\TU\心电\DNN\TreeBagger_windowedMethod\CP_Detector20151114\Models\Twave_',...
+    datestr(now,30),'QT.mat');
+
+
 addpath('F:\TU\心电\QTDatabase\Matlab\');% QT functions
 addpath('F:\TU\心电\DNN\TreeBagger_windowedMethod\T_wave_detection\ParforProgMonv2');%parfor monitor
-QT_datafilepath='F:\TU\心电\QTDatabase\Matlab\matdata';
+QT_datafilepath='F:\TU\心电\QTDatabase\Matlab\matdata\';
 saveResultfigpath='F:\TU\心电\DNN\TreeBagger_windowedMethod\CP_Detector20151114\Results\';
 QT_files=dir(QT_datafilepath);
 filenameset={QT_files(:).name};
@@ -175,7 +189,7 @@ end
 % --------------训练特征向量格式参数---------------
 % fs=360;%MIT db
 
-Testdebug_cnt=10;
+
 
 %% 遍历每个MITdb数据文件--测试
 % bad_record_id=[113 117 207 215 222 228 230 231];%滤除效果不好的file，不把他们加入训练样本集中
@@ -183,7 +197,7 @@ Testdebug_cnt=10;
 targetfiles={'sel16273','sel16420','sel16483','sel16539','sel16773','sel16786','sel16795','sel17453'};
 
 tic
-for ind = 3+debug_cnt:length(QT_files)
+for ind = 1+3+debug_cnt:length(QT_files)
     
     %% Get Correct Filename
     FileName = QT_files(ind).name;
@@ -201,21 +215,10 @@ for ind = 3+debug_cnt:length(QT_files)
     sig = ECGdwtDenoise(sig,DWT_LOW,DWT_HIGH);
     
     %% 对比检测结果
-    
     eval(STR_TMARK);
-    
-    if numel(tMark)==0
-        continue;
-    end
-    for ind = 1:length(tMark)
-        tMark(ind)=find(stime>=tMark(ind),1);
-    end
-    tMark=tMark(tMark<=denoise_N);
+
     
     %% Test signal with Model
-
-    title('signal to be tested(Press any key to continue.)');
-    
 
     clf(figure(1));
     
@@ -229,15 +232,15 @@ for ind = 3+debug_cnt:length(QT_files)
     plot(sig);
     hold on;
     plot(prd_ind,sig(prd_ind),'linestyle','none','Marker','o','MarkerEdgecolor','r');
-    plot(tMark,sig(tMark),'linestyle','none','Marker','s','MarkerEdgecolor','g','MarkerFaceColor','g');
+
     %socore
     plot(prd_ind,Pscore);
     
-    title(strcat('Rec-',fl_name,'[1:3072*20]'));
+    title(strcat('Rec-',FileName,'[1:3072*20]'));
     %----Save figure ---
-    savefig(figure(1),[saveResultfigpath,'Rec',fl_name,'_Twave.fig']);
+    savefig(figure(1),[saveResultfigpath,'Rec',FileName,'_Twave.fig']);
     %----Save test data----
-    save([saveResultfigpath,'TestData',fl_name,'_Twave.mat'],'sig','prd_ind','tind');
+    save([saveResultfigpath,'TestData',FileName,'_Twave.mat'],'sig','prd_ind','tMark');
 
 %     waitforbuttonpress;
     
