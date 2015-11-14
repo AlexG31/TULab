@@ -151,7 +151,7 @@ TreeBagger_ModelStruct.Window_Len=Window_Len;
 % disp('== Model File Saved ==');
 
 
-%% Test on model =======================================================================================
+%% Test on model 
 
 clearvars -except TreeBagger_ModelStruct;
 close all;
@@ -241,8 +241,6 @@ for ind = 1+3+debug_cnt:length(QT_files)
     savefig(figure(1),[saveResultfigpath,'Rec',FileName,'_Twave.fig']);
     %----Save test data----
     save([saveResultfigpath,'TestData',FileName,'_Twave.mat'],'sig','prd_ind','tMark');
-
-%     waitforbuttonpress;
     
     clf(figure(1));
 
@@ -251,6 +249,7 @@ for ind = 1+3+debug_cnt:length(QT_files)
     if Testdebug_cnt<=0
         break;
     end
+    
 end%file_id
 
 toc
