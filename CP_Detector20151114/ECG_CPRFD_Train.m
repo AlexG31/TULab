@@ -12,7 +12,7 @@ function ECG_CPRFD_Train(DWT_LOW,DWT_HIGH,STR_TMARK,SaveModelFilename,Target_Fil
 
     %% Key Parameters for this mFile
     % debug cnt
-    debug_cnt=1;
+    debug_cnt=1000;
 %     % dwt 前DWT_LOW阶设置为0
 %     DWT_LOW = 2;
 %     DWT_HIGH = 9;
@@ -121,11 +121,11 @@ function ECG_CPRFD_Train(DWT_LOW,DWT_HIGH,STR_TMARK,SaveModelFilename,Target_Fil
 
         %% 整理格式，拼合成特征向量与Labels
 
-        [FV,Labels]=func_sig2FV(FV,Labels,sig,tMark,Window_Len,random_relations);
+        [FV,Labels] = func_sig2FV(FV,Labels,sig,tMark,Window_Len,random_relations);
 
         %% debug : limit number of training
-        debug_cnt=debug_cnt-1;
-        if debug_cnt<=0
+        debug_cnt = debug_cnt-1;
+        if debug_cnt <= 0
             break;
         end
 

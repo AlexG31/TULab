@@ -16,7 +16,7 @@ debug_cnt=20;
 DWT_LOW = 2;
 DWT_HIGH = 9;
 % choose training target
-STR_TMARK = 'tMark = marks.T';
+STR_TMARK = 'tMark = marks.T;';
 %---保存训练模型，附上系统时间---
 SaveModelFilename=strcat('F:\TU\心电\DNN\TreeBagger_windowedMethod\CP_Detector20151114\Models\Twave_',...
     datestr(now,30),'QT.mat');
@@ -165,7 +165,7 @@ Testdebug_cnt=20;
 DWT_LOW = 2;
 DWT_HIGH = 9;
 % choose training target
-STR_TMARK = 'tMark = marks.T';
+STR_TMARK = 'tMark = marks.T;';
 %---保存训练模型，附上系统时间---
 SaveModelFilename=strcat('F:\TU\心电\DNN\TreeBagger_windowedMethod\CP_Detector20151114\Models\Twave_',...
     datestr(now,30),'QT.mat');
