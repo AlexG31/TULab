@@ -22,7 +22,7 @@ function varargout = ECG_MarkerV1_0(varargin)
 
 % Edit the above text to modify the response to help ECG_MarkerV1_0
 
-% Last Modified by GUIDE v2.5 15-Nov-2015 11:17:48
+% Last Modified by GUIDE v2.5 15-Nov-2015 14:47:38
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -71,6 +71,13 @@ end
 %% Key Parameters
 global ECG_dataPath;
 ECG_dataPath='F:\TU\心电\QTDatabase\Matlab\matdata\';
+global curMarkInd;
+curMarkInd = -1;
+global humanMarks;
+humanMarks.index = [];
+humanMarks.label = [];
+
+
 
 % --- Outputs from this function are returned to the command line.
 function varargout = ECG_MarkerV1_0_OutputFcn(hObject, eventdata, handles)
@@ -199,6 +206,9 @@ for ind = 1:size(sig,2)
 end
 
 
+global curMarkInd;
+curMarkInd = mi;
+
 % --- Executes on button press in pushbutton_zoom.
 function pushbutton_zoom_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_zoom (see GCBO)
@@ -252,18 +262,101 @@ function pushbutton5_Callback(hObject, eventdata, handles)
 FileInd = get(handles.popupmenu1,'Value');
 FileStr = get(handles.popupmenu1,'string');
 FileName = cell2mat(FileStr(FileInd));
+FileName_pure = strsplit(FileName,'.mat');
+FileName_pure = cell2mat(FileName_pure(1));
+
 
 %% Plot 
 global ECG_dataPath;
-
-load([ECG_dataPath,FileName]);
 global time;
 global sig;
+global markFileName;
+
+load([ECG_dataPath,FileName]);
+
 
 axes(handles.axes1);
 hold off;
 
 plot(time,sig);
+grid on;
+title(FileName);
+%% Load Marks
+MarkFilePath = 'F:\TU\心电\GUI_ECG_Marker\ECGMarkData\';
+markFileName = [MarkFilePath,FileName_pure,'_humanMarks.mat'];
+
+%% struct humanMarks
+% 
+% humanMarks . index
+% humanMarks . label
+global humanMarks;
+
+% File exist in the path
+if exist(markFileName) ==2
+    hold on;
+    load(markFileName);
+    % plot T marks
+    for ind =1:length(humanMarks.index)
+        if humanMarks.label(ind) == 'T'
+            Tar_Ind = humanMarks.index(ind);
+            plot(time(Tar_Ind),sig(Tar_Ind),'ro','MarkerFaceColor','g');
+        end
+    end
+    
+    hold off;
+end
 
 
+% --- Executes on selection change in popupmenu_tag.
+function popupmenu_tag_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu_tag (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
 
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_tag contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu_tag
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu_tag_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu_tag (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in pushbutton_confirm.
+function pushbutton_confirm_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_confirm (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+global curMarkInd;
+global humanMarks;
+
+TagInd = get(handles.popupmenu_tag,'Value');
+TagStr = get(handles.popupmenu_tag,'string');
+TagName = TagStr(TagInd);
+% TagName = cell2mat(TagStr(TagInd))
+
+humanMarks.index = [humanMarks.index,curMarkInd];
+humanMarks.label = [humanMarks.label,TagName];
+
+
+% --- Executes on button press in pushbutton7.
+function pushbutton7_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton7 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+global humanMarks;
+global markFileName;
+
+
+save(markFileName,'humanMarks');
