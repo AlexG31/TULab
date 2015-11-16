@@ -66,29 +66,6 @@ function ECG_CPRFD_Train(DWT_LOW,DWT_HIGH,STR_TMARK,SaveModelFilename,Target_Fil
     QT_datafilepath='F:\TU\心电\QTDatabase\Matlab\matdata\';
     QT_files=dir(QT_datafilepath);
 
-    bad_files={
-        'sel14046',...
-        'sel14157',...
-        'sel15814',...
-        'sel14172'
-    };
-
-    targetfiles={
-        'sel103',...
-        'sel116',...
-        'sel117',...
-        'sel123',...
-        'sel16265',...
-        'sel16272',...
-        'sel16273',...
-        'sel16420',...
-        'sel16483',...
-        'sel16539',...
-        'sel16773',...
-        'sel16786',...
-        'sel16795',...
-        'sel17453'
-    };
 
 
 
@@ -99,6 +76,23 @@ function ECG_CPRFD_Train(DWT_LOW,DWT_HIGH,STR_TMARK,SaveModelFilename,Target_Fil
         if numel(strfind(FileName,'.mat')) ==0
             continue;
         end
+        
+        
+        % check target files only
+        if numel(Target_Files)>0
+            % whether FileName is in Target_Files
+            isInTar = 0;
+            for ti=1:length(TargetFiles)
+                if strcmp(FileName,Target_Files{ti})==1
+                    isInTar = 1;
+                    break;
+                end
+            end
+            if isInTar==0
+                continue;
+            end
+        end
+        
         %% 载入波形数据：
         % Include 'time','sig','marks'
         % FileName = 'sel33.mat';

@@ -1,7 +1,11 @@
-function ECG_CPRFD_Test(DWT_LOW,DWT_HIGH,STR_TMARK,LoadModelFilename,saveResultPath,Target_Files)
+function ECG_CPRFD_Test(DWT_LOW,DWT_HIGH,STR_TMARK,LoadModelFilename,saveResultPath,Target_Files,MarkedRegionOnly)
 
-    if nargin ==4
+    if nargin <6
         Target_Files = [];
+    end
+    
+    if nargin <7
+        MarkedRegionOnly =0 ;
     end
 
     close all;
@@ -9,12 +13,13 @@ function ECG_CPRFD_Test(DWT_LOW,DWT_HIGH,STR_TMARK,LoadModelFilename,saveResultP
 
     %% Key Parameters for this mFile
     % debug cnt
-
+    Region_Margin = 350;
     Testdebug_cnt=1e3;
     %% get target wave type:
     target_type = strsplit(STR_TMARK,'marks.');
     target_type = cell2mat(target_type(2));
-
+    target_type = target_type(1);
+    
     addpath('F:\TU\心电\QTDatabase\Matlab\');% QT functions
     addpath('F:\TU\心电\DNN\TreeBagger_windowedMethod\T_wave_detection\ParforProgMonv2');%parfor monitor
     QT_datafilepath='F:\TU\心电\QTDatabase\Matlab\matdata\';
@@ -42,11 +47,26 @@ function ECG_CPRFD_Test(DWT_LOW,DWT_HIGH,STR_TMARK,LoadModelFilename,saveResultP
     tic
     for ind = 3:length(QT_files)
         disp(['>>剩余文件数 ：',num2str(length(QT_files)-ind)]);
-        %% Get Correct Filename
+       %% Get Correct Filename
         FileName = QT_files(ind).name;
         if numel(strfind(FileName,'.mat')) ==0
             continue;
         end
+        % check target files only
+        if numel(Target_Files)>0
+            % whether FileName is in Target_Files
+            isInTar = 0;
+            for ti=1:length(TargetFiles)
+                if strcmp(FileName,Target_Files{ti})==1
+                    isInTar = 1;
+                    break;
+                end
+            end
+            if isInTar==0
+                continue;
+            end
+        end
+        
         %% 载入波形数据：
         % Include 'time','sig','marks'
         % FileName = 'sel33.mat';
@@ -60,7 +80,28 @@ function ECG_CPRFD_Test(DWT_LOW,DWT_HIGH,STR_TMARK,LoadModelFilename,saveResultP
         %% 对比检测结果
         eval(STR_TMARK);
 
+        %% Marked Regions Only
+        sig_bk = sig;
+        
+        Region_start = 1;
+        Region_end = length(sig);
+        
+        if MarkedRegionOnly ==1
+            
+            Region_start = find(stime>=tMark(1),1);
+            Region_end = find(stime>=tMark(length(tMark)),1);
+            % out of region
+            Region_start = min(Region_start,length(sig));
+            Region_end = min(Region_end + Region_Margin,length(sig));
 
+            Region_start = max(Region_start - Region_Margin,1);
+            Region_end = max(Region_end,1);
+
+            sig = sig(Region_start:Region_end);
+            
+        end
+        
+        
         %% Test signal with Model
 
         clf(figure(1));
@@ -69,7 +110,12 @@ function ECG_CPRFD_Test(DWT_LOW,DWT_HIGH,STR_TMARK,LoadModelFilename,saveResultP
         prd_ind=[];
         Pscore=[];
         [prd_ind,Pscore]=func_TreeBaggerQT_Test_cat(TreeBagger_ModelStruct.TBobj,TreeBagger_ModelStruct.Window_Len,TreeBagger_ModelStruct.Feature_Relations,sig);%loaded test_sig105
-
+        % if only part of the region is tested ,then add prd_ind start from
+        % the region 's first index
+        prd_ind = prd_ind + Region_start -1;
+        sig = sig_bk;
+        %% add delta to prd_ind
+        
         %% Plot result & Save fig
         figure(1);
         plot(sig);
@@ -84,7 +130,7 @@ function ECG_CPRFD_Test(DWT_LOW,DWT_HIGH,STR_TMARK,LoadModelFilename,saveResultP
         %----Save figure ---
     %     savefig(figure(1),[saveResultPath,'Rec',FileName,'_',target_type,'wave.fig']);
         %----Save test data----
-        save([saveResultPath,FileName,'_',target_type,'wave.mat'],'sig','prd_ind','tMark');
+        save([saveResultPath,FileName,'_',target_type,'wave.mat'],'sig','prd_ind','Pscore','tMark');
 
 
         %% debug : limit number of test
