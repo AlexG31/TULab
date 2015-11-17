@@ -24,8 +24,8 @@ DWT_HIGH = 9;
 % choose training target
 STR_TMARK = ['tMark = marks.',Target_Label,';'];
 %---保存训练模型，附上系统时间---
-SaveModelFilename=[RandFolderPath,CurFolderName,'\',Target_Label,'wave_',...
-    datestr(now,30),'QT.mat'];
+SaveModelFilename=[RandFolderPath,CurFolderName,'\QTdb',Target_Label,'waveModel_',...
+    datestr(now,30),'.mat'];
 
 saveResultPath=[RandFolderPath,CurFolderName];
 % selected files

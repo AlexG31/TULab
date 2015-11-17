@@ -37,16 +37,16 @@ function ECG_CPRFD_Test(DWT_LOW,DWT_HIGH,STR_TMARK,LoadModelFilename,saveResultP
 
     % --------------训练特征向量格式参数---------------
 
-
-
-    %% 遍历每个MITdb数据文件--测试
-    % bad_record_id=[113 117 207 215 222 228 230 231];%滤除效果不好的file，不把他们加入训练样本集中
-    % targetfiles={'sel103','sel116','sel117','sel123','sel16265','sel16272','sel16273','sel16420','sel16483','sel16539','sel16773','sel16786','sel16795','sel17453'};
-    targetfiles={'sel16273','sel16420','sel16483','sel16539','sel16773','sel16786','sel16795','sel17453'};
-
+    N = length(QT_files)-3;
+    
+    % target files only?
+    if numel(Target_Files)>0
+%         N = length(Target_Files);
+    end
+    
     tic
     for ind = 3:length(QT_files)
-        disp(['>>剩余文件数 ：',num2str(length(QT_files)-ind)]);
+        disp(['>>剩余文件数 ：',num2str(N-ind+3)]);
        %% Get Correct Filename
         FileName = QT_files(ind).name;
         if numel(strfind(FileName,'.mat')) ==0
@@ -130,7 +130,7 @@ function ECG_CPRFD_Test(DWT_LOW,DWT_HIGH,STR_TMARK,LoadModelFilename,saveResultP
         %----Save figure ---
     %     savefig(figure(1),[saveResultPath,'Rec',FileName,'_',target_type,'wave.fig']);
         %----Save test data----
-        save([saveResultPath,FileName,'_',target_type,'wave.mat'],'sig','prd_ind','Pscore','tMark');
+        save([saveResultPath,FileName,'_',target_type,'wave.mat'],'sig','time','prd_ind','Pscore','tMark');
 
 
         %% debug : limit number of test

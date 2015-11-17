@@ -13,7 +13,7 @@ clear
 
 % Current Folder Name
 RandFolderPath = 'F:\TU\ÐÄµç\DNN\TreeBagger_windowedMethod\CP_Detector20151114\RandomSelect\';
-CurFolderName = 'RandSel1\';
+CurFolderName = 'RandSel2\';
 
 % Only test for the region with marks
 MarkedRegionOnly = 1;
@@ -112,7 +112,8 @@ N = length(RecWH);
 N_train = floor(N*0.8);
 
 Train_set = zeros(1,N_train);
-Test_set = zeros(1,N-N_train);
+% Test_set = zeros(1,N-N_train);
+Test_set = [];
 
 for ind = 1:N_train
     ri = round(rand(1)*(N-ind))+1;
@@ -133,18 +134,19 @@ for ind = 1:N
         % add to Test set
         Test_set(ti) = ind;
         ti = ti +1;
+        break;
     end
     
 end
 %% Train and Test
 Target_Label = 'T';
 Func_RSTrainAndTest(Target_Label,RandFolderPath,CurFolderName,RecWH,Train_set,Test_set);
-
-Target_Label = 'R';
-Func_RSTrainAndTest(Target_Label,RandFolderPath,CurFolderName,RecWH,Train_set,Test_set);
-
-Target_Label = 'P';
-Func_RSTrainAndTest(Target_Label,RandFolderPath,CurFolderName,RecWH,Train_set,Test_set);
+% 
+% Target_Label = 'R';
+% Func_RSTrainAndTest(Target_Label,RandFolderPath,CurFolderName,RecWH,Train_set,Test_set);
+% 
+% Target_Label = 'P';
+% Func_RSTrainAndTest(Target_Label,RandFolderPath,CurFolderName,RecWH,Train_set,Test_set);
 
 
 
