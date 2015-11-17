@@ -13,7 +13,7 @@ function ECG_CPRFD_Test(DWT_LOW,DWT_HIGH,STR_TMARK,LoadModelFilename,saveResultP
 
     %% Key Parameters for this mFile
     % debug cnt
-    Region_Margin = 350;
+    Region_Margin = 750;
     Testdebug_cnt=1e3;
     %% get target wave type:
     target_type = strsplit(STR_TMARK,'marks.');
@@ -46,7 +46,7 @@ function ECG_CPRFD_Test(DWT_LOW,DWT_HIGH,STR_TMARK,LoadModelFilename,saveResultP
     
     tic
     for ind = 3:length(QT_files)
-        disp(['>>剩余文件数 ：',num2str(N-ind+3)]);
+        
        %% Get Correct Filename
         FileName = QT_files(ind).name;
         if numel(strfind(FileName,'.mat')) ==0
@@ -66,7 +66,8 @@ function ECG_CPRFD_Test(DWT_LOW,DWT_HIGH,STR_TMARK,LoadModelFilename,saveResultP
                 continue;
             end
         end
-        
+        %% progress
+        disp(['>>剩余文件数 ：',num2str(N-ind+3)]);
         %% 载入波形数据：
         % Include 'time','sig','marks'
         % FileName = 'sel33.mat';
@@ -82,6 +83,10 @@ function ECG_CPRFD_Test(DWT_LOW,DWT_HIGH,STR_TMARK,LoadModelFilename,saveResultP
 
         %% Marked Regions Only
         sig_bk = sig;
+        % debug
+%         figure(2);
+%         plot(sig);
+%         hold on;
         
         Region_start = 1;
         Region_end = length(sig);
@@ -90,13 +95,21 @@ function ECG_CPRFD_Test(DWT_LOW,DWT_HIGH,STR_TMARK,LoadModelFilename,saveResultP
             
             Region_start = find(stime>=tMark(1),1);
             Region_end = find(stime>=tMark(length(tMark)),1);
+
+            % debug
+%             plot(Region_start,sig(Region_start),'ro');
+%             plot(Region_end,sig(Region_end),'ro');
+
             % out of region
             Region_start = min(Region_start,length(sig));
             Region_end = min(Region_end + Region_Margin,length(sig));
 
-            Region_start = max(Region_start - Region_Margin,1);
+            Region_start = max(Region_start - 10*Region_Margin,1);
             Region_end = max(Region_end,1);
-
+            
+            %debug
+%             plot(Region_start,sig(Region_start),'ro','MarkerFaceColor','g');
+%             plot(Region_end,sig(Region_end),'ro','MarkerFaceColor','g');
             sig = sig(Region_start:Region_end);
             
         end
@@ -105,7 +118,8 @@ function ECG_CPRFD_Test(DWT_LOW,DWT_HIGH,STR_TMARK,LoadModelFilename,saveResultP
         %% Test signal with Model
 
         clf(figure(1));
-
+        figure(1);
+        
         %----------------------------20150725 * Test prediction result---------------------------------------
         prd_ind=[];
         Pscore=[];

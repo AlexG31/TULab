@@ -134,7 +134,6 @@ for ind = 1:N
         % add to Test set
         Test_set(ti) = ind;
         ti = ti +1;
-        break;
     end
     
 end

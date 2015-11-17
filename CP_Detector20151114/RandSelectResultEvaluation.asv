@@ -3,12 +3,13 @@
 clc
 clear
 
-FolderPath = 'F:\TU\心电\DNN\TreeBagger_windowedMethod\CP_Detector20151114\RandomSelect\RandSel1\';
-
-FileName = [FolderPath,'sele0704.mat_Pwave.mat'];
+FolderPath = 'F:\TU\心电\DNN\TreeBagger_windowedMethod\CP_Detector20151114\RandomSelect\RandSel2\';
+ResFile = 'sele0136.mat_Twave.mat';
+FileName = [FolderPath,ResFile];
 
 origFolder = 'F:\TU\心电\QTDatabase\Matlab\matdata\';
-origName = [origFolder,'sele0704.mat'];
+origFN = strsplit(ResFile,'.mat');
+origName = [origFolder,origFN];
 
 load(FileName);
 % load in: prd_ind Pscore sig tMark time
@@ -33,4 +34,6 @@ end
 plot(sig);
 hold on;
 plot(prd_ind,sig(prd_ind),'ro');
-plot(rM,sig(prd_ind),'ro');
+plot(tMark,sig(tMark),'ro','MarkerFaceColor','g');
+
+

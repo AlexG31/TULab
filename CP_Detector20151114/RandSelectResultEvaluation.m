@@ -3,23 +3,24 @@
 clc
 clear
 
-FolderPath = 'F:\TU\心电\DNN\TreeBagger_windowedMethod\CP_Detector20151114\RandomSelect\RandSel1\';
-
-FileName = [FolderPath,'sele0704.mat_Pwave.mat'];
+FolderPath = 'F:\TU\心电\DNN\TreeBagger_windowedMethod\CP_Detector20151114\RandomSelect\RandSel2\';
+ResFile = 'sele0166.mat_Twave.mat';
+FileName = [FolderPath,ResFile];
 
 origFolder = 'F:\TU\心电\QTDatabase\Matlab\matdata\';
-origName = [origFolder,'sele0704.mat'];
+origFN = strsplit(ResFile,'.mat');
+origName = [origFolder,origFN{1},'.mat'];
 
 load(FileName);
 % load in: prd_ind Pscore sig tMark time
 
-orig = load(origName);
+% orig = load(origName);
 
 Err = zeros(1,length(tMark));
 
 
 for ind = 1:length(tMark)
-    tMark(ind) = find(orig.time>=tMark(ind),1);
+    tMark(ind) = find(time>=tMark(ind),1);
     
     % find nearest distance:
     [~,mi] = min(abs(prd_ind-tMark(ind)));
@@ -34,3 +35,5 @@ plot(sig);
 hold on;
 plot(prd_ind,sig(prd_ind),'ro');
 plot(tMark,sig(tMark),'ro','MarkerFaceColor','g');
+
+
