@@ -3,7 +3,7 @@
 
 %% Random Select Rec to Train & Test
 clc
-% clear
+clear
 % close all;
 
 %% 40% vs 60%
@@ -127,22 +127,24 @@ for ind = 1:N_train
     Train_set(ind) = ri;
 end
 
+ti = 1;
 for ind = 1:N
     if sum(Train_set==ind)==0
         % add to Test set
-        Test_set(ind) = ri;
+        Test_set(ti) = ind;
+        ti = ti +1;
     end
     
 end
 %% Train and Test
-Target_Lable = 'T';
-Func_RSTrainAndTest(Target_Lable,RandFolderPath,CurFolderName,RecWH,Train_set,Test_set);
+Target_Label = 'T';
+Func_RSTrainAndTest(Target_Label,RandFolderPath,CurFolderName,RecWH,Train_set,Test_set);
 
-Target_Lable = 'R';
-Func_RSTrainAndTest(Target_Lable,RandFolderPath,CurFolderName,RecWH,Train_set,Test_set);
+Target_Label = 'R';
+Func_RSTrainAndTest(Target_Label,RandFolderPath,CurFolderName,RecWH,Train_set,Test_set);
 
-Target_Lable = 'P';
-Func_RSTrainAndTest(Target_Lable,RandFolderPath,CurFolderName,RecWH,Train_set,Test_set);
+Target_Label = 'P';
+Func_RSTrainAndTest(Target_Label,RandFolderPath,CurFolderName,RecWH,Train_set,Test_set);
 
 
 

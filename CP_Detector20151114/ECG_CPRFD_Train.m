@@ -82,7 +82,7 @@ function ECG_CPRFD_Train(DWT_LOW,DWT_HIGH,STR_TMARK,SaveModelFilename,Target_Fil
         if numel(Target_Files)>0
             % whether FileName is in Target_Files
             isInTar = 0;
-            for ti=1:length(TargetFiles)
+            for ti=1:length(Target_Files)
                 if strcmp(FileName,Target_Files{ti})==1
                     isInTar = 1;
                     break;
@@ -95,7 +95,7 @@ function ECG_CPRFD_Train(DWT_LOW,DWT_HIGH,STR_TMARK,SaveModelFilename,Target_Fil
         
         %% 载入波形数据：
         % Include 'time','sig','marks'
-        % FileName = 'sel33.mat';
+        FileName
         load([QT_datafilepath,FileName]);
         stime = time;
 

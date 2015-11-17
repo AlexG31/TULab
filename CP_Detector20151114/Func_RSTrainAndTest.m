@@ -1,4 +1,4 @@
-function Func_RSTrainAndTest(Target_Lable,RandFolderPath,CurFolderName,RecWH,Train_set,Test_set)
+function Func_RSTrainAndTest(Target_Label,RandFolderPath,CurFolderName,RecWH,Train_set,Test_set)
 %% Random Select Rec to Train & Test
 % clc
 % clear
@@ -22,7 +22,7 @@ DWT_LOW = 2;
 DWT_HIGH = 9;
 
 % choose training target
-STR_TMARK = ['tMark = marks.',Target_Lable,';'];
+STR_TMARK = ['tMark = marks.',Target_Label,';'];
 %---保存训练模型，附上系统时间---
 SaveModelFilename=[RandFolderPath,CurFolderName,'\',Target_Label,'wave_',...
     datestr(now,30),'QT.mat'];
