@@ -24,6 +24,8 @@ function Func_UseRandSelTest(RandFolderPath,CurFolderName)
 
 
     saveResultPath=[RandFolderPath,CurFolderName];
+    mkdir(saveResultPath);
+    
     % selected files
     RecWH = {...
     'sel103.mat',...
@@ -149,7 +151,7 @@ function Func_UseRandSelTest(RandFolderPath,CurFolderName)
 
 
     %%  save Train_set & Test_set
-    mkdir(saveResultPath);
+    
     save([saveResultPath,'SelInd.mat'],'RecWH','Train_set','Test_set');
 
 end
