@@ -1,4 +1,6 @@
 %% Random Select & Test 
+% 分成几组测试，每次重新抽取训练集和测试集
+
 clc
 clear;
 
