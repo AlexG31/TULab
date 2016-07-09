@@ -16,6 +16,11 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'vim-scripts/taglist.vim.git'
 " Airline
 Plugin 'bling/vim-airline.git'
+" YCM
+if has("gui_macvim")
+    Plugin 'https://github.com/Valloric/YouCompleteMe.git'
+    let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+endif
 
 " " The following are examples of different formats supported.
 " " Keep Plugin commands between vundle#begin/end.
