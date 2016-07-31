@@ -17,10 +17,10 @@ Plugin 'vim-scripts/taglist.vim.git'
 " Airline
 Plugin 'bling/vim-airline.git'
 " YCM
-if has("gui_macvim")
-    Plugin 'https://github.com/Valloric/YouCompleteMe.git'
-    let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
-endif
+"if has("gui_macvim")
+    "Plugin 'https://github.com/Valloric/YouCompleteMe.git'
+    "let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+"endif
 
 " " The following are examples of different formats supported.
 " " Keep Plugin commands between vundle#begin/end.
@@ -115,11 +115,12 @@ source $VIMRUNTIME/delmenu.vim
 source $VIMRUNTIME/menu.vim
 "½â¾öconsleÊä³öÂÒÂë
 language messages zh_CN.utf-8
-"gpf def
+
+" gpf def
 map <F9> :w <CR> :! python %<CR>
 map <F8> :w <CR> :! g++ -g  % -std=c++11 -o %< <CR> :! ./%< 
 map J $
-map <F2> :NERDTreeToggle<CR>
+map <F2> :NERDTreeToggle<CR> :set columns=100<CR>
 map <F3> :TlistToggle<CR>
 imap <S-Tab> <C-N>
 map <C-f> q:p0i/<CR>
@@ -129,5 +130,15 @@ nmap <silent> <C-k> :wincmd k<CR>
 nmap <silent> <C-j> :wincmd j<CR>
 nmap <silent> <C-h> :wincmd h<CR>
 nmap <silent> <C-l> :wincmd l<CR>
+nmap <Leader>s :w<cr>
+map <C-a> ggvG
+map <C-k> :pyf /usr/local/Cellar/clang-format/2015-09-01/share/clang/clang-format.py<cr>
+imap <C-k> :pyf /usr/local/Cellar/clang-format/2015-09-01/share/clang/clang-format.py<cr>
+
+"  map for recording
+nnoremap Q @q
+vnoremap Q :norm :@q
+
 "open nerdtree
-"autocmd VimEnter * NERDTree
+
+" autocmd VimEnter * NERDTree
