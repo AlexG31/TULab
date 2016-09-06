@@ -12,6 +12,7 @@ Plugin 'VundleVim/Vundle.vim'
 
 " Nerd Tree
 Plugin 'scrooloose/nerdtree'
+let g:NERDTreeChDirMode=2
 " comment plugin
 Plugin 'scrooloose/nerdcommenter'
 
@@ -109,7 +110,7 @@ language messages zh_CN.utf-8
 map <F9> :w <CR> :! python %<CR>
 map <F8> :w <CR> :! g++ -g  % -std=c++11 -o %< <CR> :! ./%< 
 map J $
-map <F2> :NERDTreeToggle<CR> :set columns=100<CR>
+map <F2> :cd %:p:h<cr> :NERDTreeCWD<cr><cr> :set columns=100<cr>
 map <F3> :TlistToggle<CR>
 imap <S-Tab> <C-N>
 map <C-f> q:p0i/<CR>
