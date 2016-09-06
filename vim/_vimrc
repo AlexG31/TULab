@@ -12,8 +12,11 @@ Plugin 'VundleVim/Vundle.vim'
 
 " Nerd Tree
 Plugin 'scrooloose/nerdtree'
+" comment plugin
+Plugin 'scrooloose/nerdcommenter'
+
 " TagList
-Plugin 'vim-scripts/taglist.vim.git'
+" Plugin 'vim-scripts/taglist.vim.git'
 " Airline
 Plugin 'bling/vim-airline.git'
 " YCM
@@ -22,39 +25,10 @@ Plugin 'bling/vim-airline.git'
     "let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
 "endif
 
-" " The following are examples of different formats supported.
-" " Keep Plugin commands between vundle#begin/end.
-" " plugin on GitHub repo
-" Plugin 'tpope/vim-fugitive'
-" " plugin from http://vim-scripts.org/vim/scripts.html
-" Plugin 'L9'
-" " Git plugin not hosted on GitHub
-" Plugin 'git://git.wincent.com/command-t.git'
-" " git repos on your local machine (i.e. when working on your own plugin)
-" Plugin 'file:///home/gmarik/path/to/plugin'
-" " The sparkup vim script is in a subdirectory of this repo called vim.
-" " Pass the path to set the runtimepath properly.
-" Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
-" " Avoid a name conflict with L9
-" Plugin 'user/L9', {'name': 'newL9'}
 "
 " " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
-" " To ignore plugin indent changes, instead use:
-" "filetype plugin on
-" "
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append set!set to update or just
-" :PluginUpdate
-" :PluginSearch foo - searches for foo; append set!set to refresh local
-" cache
-" " :PluginClean      - confirms removal of unused plugins; append set!set to
-" auto-approve removal
-" "
-" " see :h vundle for more details or wiki for FAQ
-" " Put your non-Plugin stuff after this line
 
 set nocompatible
 source $VIMRUNTIME/vimrc_example.vim
@@ -86,7 +60,9 @@ function MyDiff()
   silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3 . eq
 endfunction
 
+" Color scheme
 colorscheme badwolf
+
 syntax enable           " shortname for a command
 set tabstop=4           " Tab convert rule when open a file
 set softtabstop=4
@@ -94,8 +70,21 @@ set cursorline          " highlight current cursor line
 set wildmenu            " autocompletes
 filetype indent on      " load filetype-specific indent files
 filetype plugin on
+
 set lazyredraw          " redraw only when we need to.
 set showmatch           " highlight matching [{()}]
+
+" Font setting
+if has('gui_running')
+    set guioptions-=T  " no toolbar
+    colorscheme elflord
+    set lines=60 columns=100 linespace=-4
+    if has('gui_win32')
+        set guifont=DejaVu_Sans_Mono:h10:cANSI
+    else
+        set guifont=Andale\ Mono\ 12
+    endif
+endif
 
 exec ":set nu!"
 exec ":set expandtab"
@@ -110,10 +99,10 @@ set fileencoding=chinese
 else
 set fileencoding=utf-8
 endif
-"½â¾ö²Ëµ¥ÂÒÂë
+"è§£å†³èœå•ä¹±ç 
 source $VIMRUNTIME/delmenu.vim
 source $VIMRUNTIME/menu.vim
-"½â¾öconsleÊä³öÂÒÂë
+"è§£å†³consleè¾“å‡ºä¹±ç 
 language messages zh_CN.utf-8
 
 " gpf def
@@ -126,6 +115,13 @@ imap <S-Tab> <C-N>
 map <C-f> q:p0i/<CR>
 map <C-s> <Esc>:w<CR>
 map <C-x> <Esc>:q<CR>
+
+" Copy & paste
+map <c-p> "+p<cr>
+map <c-y> "+y<cr>
+imap <c-p> <esc>"+p<cr>
+imap <c-y> <esc>"+y<cr>
+
 nmap <silent> <C-k> :wincmd k<CR>
 nmap <silent> <C-j> :wincmd j<CR>
 nmap <silent> <C-h> :wincmd h<CR>
