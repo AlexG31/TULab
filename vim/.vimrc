@@ -117,11 +117,13 @@ vnoremap Q :norm :@q
 
 highlight ColorColumn ctermbg=magenta guibg=#5fd317 guifg = #0023fa
 call matchadd('ColorColumn', '\%81v', 100)
-hi CursorColumn cterm=NONE ctermbg=magenta ctermfg=white guibg=#5fd317 guifg=white
 set colorcolumn=81
 
 set cursorcolumn
 set cursorline
+
+" Airline display for single file
+set laststatus=2
 
 "open nerdtree
 
