@@ -1,6 +1,8 @@
 colorscheme badwolf
 
 set guifont=DejaVu\ Sans\ Mono\ 12
+"set guifont=Monaco:h18
+
 
 highlight ColorColumn ctermbg=magenta
 call matchadd('ColorColumn', '\%81v', 100)
