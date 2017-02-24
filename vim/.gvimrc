@@ -1,6 +1,8 @@
 colorscheme badwolf
 
 set guifont=DejaVu\ Sans\ Mono\ 12
+"set guifont=Monaco:h18
+
 
 highlight Normal guifg=#A39AA7 guibg=#000000
 highlight ColorColumn ctermbg=magenta
