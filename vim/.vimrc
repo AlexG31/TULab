@@ -115,7 +115,7 @@ imap <C-k> :pyf /usr/local/Cellar/clang-format/2015-09-01/share/clang/clang-form
 nnoremap Q @q
 vnoremap Q :norm :@q
 
-highlight ColorColumn ctermbg=magenta guibg=#5fd317 guifg = #0023fa
+highlight ColorColumn ctermbg=magenta guibg=#584c5d guifg=#000000
 call matchadd('ColorColumn', '\%81v', 100)
 set colorcolumn=81
 
@@ -124,6 +124,8 @@ set cursorline
 
 " Airline display for single file
 set laststatus=2
+set backupdir=/tmp,.
+set directory=/tmp,.
 
 "open nerdtree
 
