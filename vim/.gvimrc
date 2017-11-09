@@ -1,5 +1,5 @@
 colorscheme badwolf
-
+set linespace=2;
 set guifont=DejaVu\ Sans\ Mono\ 12
 "set guifont=Monaco:h18
 
